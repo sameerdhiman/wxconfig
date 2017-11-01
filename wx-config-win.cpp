@@ -1030,8 +1030,11 @@ public:
 //----------------------------------------------------
 
         // ### Variables, Part 2: ###
-        po["LIBDIRNAME"] = po["prefix"] + "/lib/" + getName() + "_" + po["LIBTYPE_SUFFIX"] + cfg["CFG"];
-
+		if (cfg["COMPILER_VERSION"] == "") {
+			po["LIBDIRNAME"] = po["prefix"] + "/lib/" + getName() + "_" + po["LIBTYPE_SUFFIX"] + cfg["CFG"];
+		} else {
+			po["LIBDIRNAME"] = po["prefix"] + "/lib/" + getName() + cfg["COMPILER_VERSION"] + "_" + po["LIBTYPE_SUFFIX"] + cfg["CFG"];
+		}
         po["SETUPHDIR"]  = po["LIBDIRNAME"] + "/" + po["PORTNAME"] + po["WXUNIVNAME"];
         po["SETUPHDIR"] += po["WXUNICODEFLAG"] + po["WXDEBUGFLAG"];
 
@@ -2278,7 +2281,11 @@ void detectCompiler(Options& po, const CmdLineOptions& cl)
         CompilerMinGW compiler;
         compiler.process(po, cl);
         return;
-    } else if (po["wxcfg"].find("dmc_") != std::string::npos) {
+    } else if (po["wxcfg"].find("TDM_") != std::string::npos) {
+        CompilerMinGW compiler;
+        compiler.process(po, cl);
+        return;
+	} else if (po["wxcfg"].find("dmc_") != std::string::npos) {
         CompilerDMC compiler;
         compiler.process(po, cl);
         return;
